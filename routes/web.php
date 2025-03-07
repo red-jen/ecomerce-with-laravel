@@ -1,11 +1,17 @@
 <?php
-
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\ProductsController;
 
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
+
+
+use App\Http\Middleware\AdminAccess;
+
+
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -39,7 +45,22 @@ Route::middleware('auth')->group(function () {
 // the real work 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
-        Route::resource('categories', Admin\CategoryController::class);
+        Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+        Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
     });
 });
+// Public routes
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+Route::patch('/cart/update/{cartItem}', [CartController::class, 'updateQuantity'])->name('cart.update');
+Route::delete('/cart/remove/{cartItem}', [CartController::class, 'removeItem'])->name('cart.remove');
+Route::delete('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear');
+
+// Public product routes
+Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
+Route::get('/products/{product:slug}', [ProductsController::class, 'show'])->name('products.show');
+Route::delete('/admin/product-images/{productImage}', [App\Http\Controllers\Admin\ProductImageController::class, 'destroy'])->name('admin.product-images.destroy');
+
 require __DIR__.'/auth.php';
+
+

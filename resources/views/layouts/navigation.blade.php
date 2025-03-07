@@ -16,7 +16,33 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+                 <!-- In resources/views/layouts/navigation.blade.php -->
+<div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+    <!-- Other navigation links -->
+    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
+        {{ __('Shop') }}
+    </x-nav-link>
+    <x-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.*')">
+        {{ __('Cart') }}
+    </x-nav-link>
+</div>
+                <!-- Admin Navigation Links -->
+@if (auth()->check() && auth()->user()->is_admin)
+<div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+    <!-- Other navigation links -->
+    <x-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
+        {{ __('Categories') }}
+    </x-nav-link>
+    <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
+        {{ __('Products') }}
+    </x-nav-link>
+</div>
+@endif
+
+<!-- In resources/views/layouts/navigation.blade.php -->
+
             </div>
+
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
