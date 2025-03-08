@@ -4,7 +4,13 @@
             {{ __('Create Product') }}
         </h2>
     </x-slot>
-
+<!-- Replace the existing error lines with this -->
+<x-input-error :messages="$errors->get('images')" class="mt-2" />
+    @foreach($errors->get('images.*') as $key => $messages)
+        @foreach($messages as $message)
+            <x-input-error :messages="[$message]" class="mt-2" />
+        @endforeach
+    @endforeach
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -56,8 +62,13 @@
                             <x-input-label for="images" :value="__('Product Images')" />
                             <input type="file" id="images" name="images[]" multiple class="block mt-1 w-full" accept="image/*" />
                             <p class="mt-1 text-sm text-gray-500">You can select multiple images. Supported formats: JPG, PNG, GIF</p>
-                            <x-input-error :messages="$errors->get('images')" class="mt-2" />
-                            <x-input-error :messages="$errors->get('images.*')" class="mt-2" />
+                     <!-- Replace the existing error lines with this -->
+<x-input-error :messages="$errors->get('images')" class="mt-2" />
+    @foreach($errors->get('images.*') as $key => $messages)
+        @foreach($messages as $message)
+            <x-input-error :messages="[$message]" class="mt-2" />
+        @endforeach
+    @endforeach
                         </div>
                         <!-- Active Status -->
                         <div class="mt-4">
