@@ -7,7 +7,7 @@ use App\Http\Controllers\ProductsController;
 
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\ReviewController;
 
 use App\Http\Middleware\AdminAccess;
 
@@ -60,7 +60,12 @@ Route::delete('/cart/clear', [CartController::class, 'clearCart'])->name('cart.c
 Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
 Route::get('/products/{product:slug}', [ProductsController::class, 'show'])->name('products.show');
 Route::delete('/admin/product-images/{productImage}', [App\Http\Controllers\Admin\ProductImageController::class, 'destroy'])->name('admin.product-images.destroy');
+Route::get('/checkout', [CartController::class, 'index'])->name('checkout');
 
+
+// Review routes
+Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
+Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy')->middleware('auth');
 require __DIR__.'/auth.php';
 
 
