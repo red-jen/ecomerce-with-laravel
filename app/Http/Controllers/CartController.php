@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 class CartController extends Controller
 {
     // Get or create a cart for the current session/user
-    protected function getCart()
+    public function getCart()
     {
         $sessionId = session()->getId();
         $userId = auth()->id();
@@ -49,33 +49,53 @@ class CartController extends Controller
         return view('cart.index', compact('cart'));
     }
     
-    // Add a product to cart
+    // Simplified Add to Cart method
     public function addToCart(Request $request)
     {
-        $validated = $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1',
-        ]);
+        // 1. Simple validation
+        $productId = $request->input('product_id');
+        $quantity = $request->input('quantity', 1); // Default to 1 if not provided
         
+        if (!$productId || $quantity < 1) {
+            return redirect()->back()->with('error', 'Invalid product or quantity');
+        }
+        
+        // 2. Get the product
+        $product = Product::find($productId);
+        if (!$product) {
+            return redirect()->back()->with('error', 'Product not found');
+        }
+        
+        // 3. Get or create cart
         $cart = $this->getCart();
         
-        // Check if product is already in cart
-        $cartItem = $cart->items()->where('product_id', $validated['product_id'])->first();
+        // 4. Check if product is already in cart
+        $cartItem = $cart->items()->where('product_id', $productId)->first();
         
+        // 5. Update or create cart item
         if ($cartItem) {
             // Update quantity if product already exists in cart
             $cartItem->update([
-                'quantity' => $cartItem->quantity + $validated['quantity']
+                'quantity' => $cartItem->quantity + $quantity
             ]);
         } else {
             // Add new item to cart
             $cart->items()->create([
-                'product_id' => $validated['product_id'],
-                'quantity' => $validated['quantity']
+                'product_id' => $productId,
+                'quantity' => $quantity
             ]);
         }
         
-        return redirect()->route('cart.index')->with('success', 'Product added to cart!');
+        // 6. Return with success message
+        $message = $product->name . ' added to cart!';
+        
+        // If "keep shopping" was checked, stay on the products page
+        if ($request->has('keep_shopping')) {
+            return redirect()->back()->with('success', $message);
+        }
+        
+        // Otherwise go to cart page
+        return redirect()->route('cart.index')->with('success', $message);
     }
     
     // Update cart item quantity
