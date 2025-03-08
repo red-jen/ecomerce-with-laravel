@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .title {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #717171, #919191, #515151);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 2rem;
+            animation: titleShine 3s infinite;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #919191;
+            margin-bottom: 3rem;
+        }
+
+        .cta-button {
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            background: linear-gradient(45deg, #4a4a4a, #646464);
+            border: none;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: buttonShine 3s infinite;
+        }
+
+        .gear {
+            position: absolute;
+            border-radius: 50%;
+            border: 15px solid #444;
+            animation: rotate 10s linear infinite;
+        }
+
+        .gear-1 {
+            width: 200px;
+            height: 200px;
+            top: -100px;
+            left: -100px;
+        }
+
+        .gear-2 {
+            width: 300px;
+            height: 300px;
+            bottom: -150px;
+            right: -150px;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes titleShine {
+            0%, 100% { filter: brightness(100%); }
+            50% { filter: brightness(150%); }
+        }
+
+        @keyframes buttonShine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+            }
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            .gear {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gear gear-1"></div>
+    <div class="gear gear-2"></div>
+    
+    <div class="container">
+        <h1 class="title">Welcome</h1>
+        <p class="subtitle">Experience the power of industrial design</p>
+        <button class="cta-button">Get Started</button>
+    </div>
+
+    <script>
+        document.querySelector('.cta-button').addEventListener('mouseover', function() {
+            this.style.transform = 'translateY(-3px)';
+        });
+
+        document.querySelector('.cta-button').addEventListener('mouseout', function() {
+            this.style.transform = 'translateY(0)';
+        });
+
+        // Add rotating gears with mouse movement parallax effect
+        document.addEventListener('mousemove', function(e) {
+            const gears = document.querySelectorAll('.gear');
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            gears.forEach(gear => {
+                const speed = gear.classList.contains('gear-1') ? 2 : 1;
+                const x = (window.innerWidth - mouseX * speed) / 100;
+                const y = (window.innerHeight - mouseY * speed) / 100;
+                
+                gear.style.transform = `rotate(${x + y}deg)`;
+            });
+        });
+    </script>
+</body>
+</html>
