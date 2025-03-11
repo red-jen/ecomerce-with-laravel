@@ -60,12 +60,28 @@ Route::delete('/cart/clear', [CartController::class, 'clearCart'])->name('cart.c
 Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
 Route::get('/products/{product:slug}', [ProductsController::class, 'show'])->name('products.show');
 Route::delete('/admin/product-images/{productImage}', [App\Http\Controllers\Admin\ProductImageController::class, 'destroy'])->name('admin.product-images.destroy');
+
+
+
 Route::get('/checkout', [CartController::class, 'index'])->name('checkout');
 
 
 // Review routes
 Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
 Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy')->middleware('auth');
+
+
+
+
+
+use App\Http\Controllers\CheckoutController;
+// Checkout routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/checkoute', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
+    Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
+    Route::get('/checkout/cancel/{order}', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
+});
 require __DIR__.'/auth.php';
 
 
