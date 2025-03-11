@@ -35,9 +35,9 @@ class CheckoutController extends Controller
         
         // Simple shipping calculation
         if ($totalItems <= 2) {
-            return 5.00;
+            return 0.00;
         } elseif ($totalItems <= 5) {
-            return 8.00;
+            return 0.00;
         } else {
             return 12.00;
         }
